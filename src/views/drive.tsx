@@ -102,15 +102,13 @@ export function DriveView() {
           </motion.div>
 
           {/* Main headline */}
-          <h1 className="font-mono text-[42px] sm:text-[56px] md:text-[68px] lg:text-[76px] font-[800] leading-[0.95] text-on-surface mb-3 tracking-tighter">
+          <h1 className="font-mono text-[38px] sm:text-[48px] md:text-[56px] lg:text-[62px] font-[800] leading-[0.95] text-on-surface mb-3 tracking-tighter">
             <AnimatedText text="YASH" />
             <br />
-            <AnimatedText text="KALKHAM" />
-            <br />
-            <AnimatedText text="BKAR:" />
+            <AnimatedText text="KALKHAMBKAR:" />
           </h1>
 
-          <div className="font-mono text-[32px] sm:text-[40px] md:text-[52px] lg:text-[60px] font-[700] mb-8 drop-shadow-[0_0_12px_rgba(255,87,26,0.35)] text-primary-container leading-[1.05] tracking-tighter">
+          <div className="font-mono text-[28px] sm:text-[36px] md:text-[44px] lg:text-[50px] font-[700] mb-8 drop-shadow-[0_0_12px_rgba(255,87,26,0.35)] text-primary-container leading-[1.05] tracking-tighter">
             <AnimatedText text="FULL-STACK" />
             <br />
             <AnimatedText text="ARCHITECT" />
@@ -143,7 +141,7 @@ export function DriveView() {
             </button>
             <button
               onClick={() => setActiveTab("COMMS")}
-              className="border border-white/40 text-white font-mono text-[13px] h-[44px] px-5 uppercase tracking-[0.1em] hover:bg-white/8 hover:border-white/60 transition-all"
+              className="border border-white/40 text-white font-mono text-[13px] h-[44px] px-5 uppercase tracking-[0.1em] hover:bg-white/10 hover:border-white/60 transition-all"
             >
               INITIATE COMMS
             </button>
@@ -154,7 +152,7 @@ export function DriveView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 0.6 }}
-            className="mt-12 grid grid-cols-3 gap-4 border-t border-white/8 pt-6"
+            className="mt-12 grid grid-cols-3 gap-4 border-t border-white/10 pt-6"
           >
             {[
               { label: "Uptime", value: "99.99%" },

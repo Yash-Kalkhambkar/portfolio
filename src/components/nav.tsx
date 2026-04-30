@@ -20,11 +20,14 @@ export function Nav() {
           {/* Left: Logo + Tabs */}
           <div className="flex items-center gap-6 lg:gap-10 min-w-0">
             <button
-              className="text-base md:text-lg font-black italic tracking-tighter text-primary-container font-mono glitch-text select-none shrink-0"
-              data-text="SHIFT_ENGINEER"
+              className="font-mono font-black italic tracking-tighter text-primary-container shrink-0 select-none glitch-text"
+              data-text="YASH // SHIFT_ENGINEER"
               onClick={() => handleTabClick("DRIVE")}
+              style={{ fontSize: "clamp(11px, 1.1vw, 15px)" }}
             >
-              SHIFT_ENGINEER
+              <span className="text-white/50">YASH</span>
+              <span className="text-white/25 mx-1.5">//</span>
+              <span>SHIFT_ENGINEER</span>
             </button>
 
             {/* Desktop tabs */}
