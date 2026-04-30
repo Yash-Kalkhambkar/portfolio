@@ -62,6 +62,11 @@
 @layer base {
   body {
     background: radial-gradient(circle at center, #111a1a 0%, #080808 100%);
+    cursor: none;
+  }
+
+  a, button, [role="button"], input, textarea, select, label[for] {
+    cursor: none;
   }
 }
 
@@ -131,6 +136,67 @@
 }
 .progress-ring {
   animation: drawProgress 1.5s ease-out forwards;
+}
+
+/* Glitch effect */
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  20% { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 1px); }
+  40% { clip-path: inset(50% 0 30% 0); transform: translate(3px, -1px); }
+  60% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
+  80% { clip-path: inset(10% 0 80% 0); transform: translate(2px, -2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0); }
+  20% { clip-path: inset(60% 0 20% 0); transform: translate(3px, -1px); }
+  40% { clip-path: inset(30% 0 50% 0); transform: translate(-3px, 1px); }
+  60% { clip-path: inset(10% 0 70% 0); transform: translate(2px, 2px); }
+  80% { clip-path: inset(80% 0 10% 0); transform: translate(-2px, -2px); }
+}
+
+.glitch-text {
+  position: relative;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.glitch-text:hover::before {
+  color: #00eefc;
+  opacity: 0.7;
+  animation: glitch-1 0.4s steps(1) forwards;
+}
+.glitch-text:hover::after {
+  color: #FF571A;
+  opacity: 0.7;
+  animation: glitch-2 0.4s steps(1) forwards;
+}
+
+/* Page transition flash overlay */
+@keyframes flashScan {
+  0% { opacity: 0; transform: translateY(-100%); }
+  30% { opacity: 0.08; }
+  100% { opacity: 0; transform: translateY(100%); }
+}
+
+.page-flash {
+  animation: flashScan 0.4s ease-out forwards;
+}
+
+/* HUD corner draw-in */
+@keyframes drawCornerTL {
+  0% { width: 0; height: 0; }
+  50% { width: 20px; height: 0; }
+  100% { width: 20px; height: 20px; }
+}
+@keyframes drawCornerTR {
+  0% { width: 0; height: 0; }
+  50% { width: 20px; height: 0; }
+  100% { width: 20px; height: 20px; }
 }
 
 /* HUD System Component Parts */

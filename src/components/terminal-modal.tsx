@@ -9,13 +9,21 @@ export function TerminalModal() {
 
   useEffect(() => {
     if (isTerminalOpen) {
-      setOutput([
-        "> INITIALIZING SYSTEM...", 
-        "> KERNEL: ACTIVE",
-        "> ROOT ACCESS GRANTED.", 
-        "> AWAITING DEPLOYMENT COMMANDS_"
-      ]);
+      setOutput([]);
       setInputVal("");
+      // Staggered typewriter boot sequence
+      const lines = [
+        "> INITIALIZING SYSTEM...",
+        "> KERNEL: ACTIVE",
+        "> ROOT ACCESS GRANTED.",
+        "> PILOT: YASH KALKHAMBKAR",
+        "> AWAITING DEPLOYMENT COMMANDS_",
+      ];
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          setOutput((prev) => [...prev, line]);
+        }, i * 250);
+      });
     }
   }, [isTerminalOpen]);
 
@@ -59,7 +67,7 @@ export function TerminalModal() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }} 
             animate={{ opacity: 1, scale: 1, y: 0 }} 
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-2xl bg-surface-lowest border border-white/10 shadow-[0_0_50px_rgba(255,77,0,0.1)] rounded-sm z-[101] overflow-hidden flex flex-col"
+            className="fixed bottom-0 left-0 right-0 sm:top-1/2 sm:bottom-auto sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[90vw] sm:max-w-2xl bg-surface-lowest border border-white/10 shadow-[0_0_50px_rgba(255,77,0,0.1)] rounded-t-lg sm:rounded-sm z-[101] overflow-hidden flex flex-col"
           >
             <div className="flex justify-between items-center bg-surface-container/50 border-b border-white/10 px-4 py-3">
               <div className="flex items-center gap-3">
@@ -69,9 +77,22 @@ export function TerminalModal() {
               <button onClick={() => setTerminalOpen(false)} className="text-tertiary hover:text-primary-container material-symbols-outlined text-[16px] transition-colors">close</button>
             </div>
             
-            <div className="p-6 h-[350px] overflow-y-auto font-mono text-sm text-tertiary flex flex-col gap-2">
+            <div className="p-4 sm:p-6 h-[280px] sm:h-[350px] overflow-y-auto font-mono text-sm text-tertiary flex flex-col gap-2">
                {output.map((line, i) => (
-                 <div key={i} className={line.includes("NOT RECOGNIZED") ? "text-red-400" : ""}>{line}</div>
+                 <motion.div 
+                   key={i}
+                   initial={{ opacity: 0, x: -8 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   transition={{ duration: 0.2 }}
+                   className={
+                     line.includes("NOT RECOGNIZED") ? "text-red-400" :
+                     line.includes("PILOT") ? "text-primary-container font-bold" :
+                     line.includes("GRANTED") || line.includes("READY") ? "text-[#00C878]" :
+                     ""
+                   }
+                 >
+                   {line}
+                 </motion.div>
                ))}
                
                <form onSubmit={handleSubmit} className="flex gap-2 text-primary-container mt-2">

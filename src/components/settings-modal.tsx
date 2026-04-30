@@ -29,7 +29,7 @@ export function SettingsModal() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }} 
             animate={{ opacity: 1, scale: 1, y: 0 }} 
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-surface-lowest border border-white/10 shadow-[0_0_50px_rgba(255,77,0,0.1)] rounded-sm z-[101] overflow-hidden flex flex-col"
+            className="fixed bottom-0 left-0 right-0 sm:top-1/2 sm:bottom-auto sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[90vw] sm:max-w-sm bg-surface-lowest border border-white/10 shadow-[0_0_50px_rgba(255,77,0,0.1)] rounded-t-lg sm:rounded-sm z-[101] overflow-hidden flex flex-col"
           >
             <div className="flex justify-between items-center bg-surface-container/50 border-b border-white/10 px-6 py-4">
               <span className="font-mono text-[12px] font-bold tracking-[0.1em] text-primary-container uppercase flex items-center gap-2">
