@@ -152,24 +152,22 @@ export function DriveView() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 0.6 }}
-            className="mt-12 grid grid-cols-3 gap-4 border-t border-white/10 pt-6"
+            className="mt-12 grid grid-cols-3 gap-6 border-t border-white/10 pt-6"
           >
             {[
-              { label: "Mood", value: "⚡ LOCKED IN" },
-              { label: "Vibe", value: "🎧 DEEP WORK", highlight: true },
-              { label: "Coffee", value: "☕ CRITICAL" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="font-mono text-[10px] tracking-[0.12em] mb-1 uppercase text-primary-container/60">
+              { label: "CGPA", value: "8.23" },
+              { label: "PROJECTS", value: "12+" },
+              { label: "NATL. HACKATHON", value: "WINNER" },
+            ].map((stat, i) => (
+              <div key={stat.label} className="flex flex-col gap-1.5">
+                <div className="font-mono text-[10px] tracking-[0.12em] uppercase text-primary-container/80">
                   {stat.label}
                 </div>
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.3, duration: 0.4 }}
-                  className={`font-mono text-[13px] md:text-[14px] font-bold leading-tight ${
-                    stat.highlight ? "text-white" : "text-on-surface"
-                  }`}
+                  transition={{ delay: 1.3 + i * 0.08, duration: 0.4 }}
+                  className="font-mono text-[26px] md:text-[30px] font-bold text-on-surface tracking-tight leading-none"
                 >
                   {stat.value}
                 </motion.div>
