@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 import { AnimatePresence, motion } from "motion/react";
 import { useState, useRef } from "react";
 import { Footer } from "./components/footer";

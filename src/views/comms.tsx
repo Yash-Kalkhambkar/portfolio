@@ -3,10 +3,10 @@ import emailjs from "@emailjs/browser";
 import { HUDBox } from "../components/hud-box";
 import { useState, useRef } from "react";
 
-// ─── Replace these with your EmailJS credentials ───────────────────────────
-const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
-const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";
+// ─── EmailJS credentials via environment variables ─────────────────────────
+const EMAILJS_SERVICE_ID  = import.meta.env.VITE_EMAILJS_SERVICE_ID  as string;
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
+const EMAILJS_PUBLIC_KEY  = import.meta.env.VITE_EMAILJS_PUBLIC_KEY  as string;
 // ───────────────────────────────────────────────────────────────────────────
 
 function AnimatedInput({
@@ -97,9 +97,10 @@ export function CommsView() {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          from_name:  name,
-          from_email: email,
-          message:    payload,
+          name,
+          email,
+          time:    email,   // shows sender's email in the "time" field
+          message: payload,
         },
         EMAILJS_PUBLIC_KEY
       );
@@ -211,7 +212,8 @@ export function CommsView() {
                       transition={{ delay: 0.5 }}
                       className="font-sans text-sm text-on-surface-variant opacity-70"
                     >
-                      Message routed to yashkalkhambkar@gmail.com
+                      Message routed to yashkalkhambkar@gmail.com.<br/>
+                      <span className="text-[12px] opacity-60">Reply will be sent to {email || "your email"}.</span>
                     </motion.p>
                   </div>
 
