@@ -36,7 +36,7 @@ export function TerminalModal() {
     if (lowerCmd === "help") {
       response = "> AVAILABLE COMMANDS: ping, status, clear, exit";
     } else if (lowerCmd === "ping") {
-      response = "> PONG: LATENCY 12ms";
+      response = "> PONG: OK";
     } else if (lowerCmd === "status") {
       response = "> SYSTEM STATUS: NOMINAL (99.99%)";
     } else if (lowerCmd === "clear") {

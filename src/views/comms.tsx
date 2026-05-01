@@ -222,7 +222,7 @@ export function CommsView() {
               <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-primary-container">UPLINK_STABLE</span>
             </div>
             <div className="font-mono text-[9px] sm:text-[10px] tracking-widest text-tertiary opacity-50 uppercase">
-              Latency: 12ms | Ping: OK
+              Pune, India
             </div>
           </motion.div>
         </div>

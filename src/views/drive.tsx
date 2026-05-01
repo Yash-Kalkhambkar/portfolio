@@ -147,7 +147,7 @@ export function DriveView() {
             </button>
           </motion.div>
 
-          {/* Telemetry stats */}
+          {/* Stats */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -155,9 +155,9 @@ export function DriveView() {
             className="mt-12 grid grid-cols-3 gap-4 border-t border-white/10 pt-6"
           >
             {[
-              { label: "Uptime", value: "99.99%" },
-              { label: "Latency", value: "12ms", highlight: true },
-              { label: "Deployments", value: "1,024+" },
+              { label: "Mood", value: "⚡ LOCKED IN" },
+              { label: "Vibe", value: "🎧 DEEP WORK", highlight: true },
+              { label: "Coffee", value: "☕ CRITICAL" },
             ].map((stat) => (
               <div key={stat.label}>
                 <div className="font-mono text-[10px] tracking-[0.12em] mb-1 uppercase text-primary-container/60">
@@ -167,7 +167,7 @@ export function DriveView() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.3, duration: 0.4 }}
-                  className={`font-mono text-[20px] md:text-[24px] font-bold ${
+                  className={`font-mono text-[13px] md:text-[14px] font-bold leading-tight ${
                     stat.highlight ? "text-white" : "text-on-surface"
                   }`}
                 >
