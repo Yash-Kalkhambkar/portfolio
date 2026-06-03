@@ -1,142 +1,145 @@
 import { AnimatePresence, motion } from "motion/react";
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Footer } from "./components/footer";
 import { Nav } from "./components/nav";
-import { AppProvider, useAppContext, TABS, Tab } from "./lib/context";
+import { AppProvider, TABS, useAppContext } from "./lib/context";
+import type { Tab } from "./lib/context";
+import { debounce, scrollToSection } from "./lib/utils";
 import { TerminalModal } from "./components/terminal-modal";
 import { SettingsModal } from "./components/settings-modal";
 import { BootScreen } from "./components/boot-screen";
 import { CustomCursor } from "./components/custom-cursor";
+import { ScrollIndicator } from "./components/scroll-indicator";
 import { CommsView } from "./views/comms";
 import { DriveView } from "./views/drive";
 import { GarageView } from "./views/garage";
 import { SpecsView } from "./views/specs";
 import { TelemetryView } from "./views/telemetry";
 
-const TAB_INDEX: Record<Tab, number> = {
-  DRIVE: 0,
-  SPECS: 1,
-  GARAGE: 2,
-  TELEMETRY: 3,
-  COMMS: 4,
-};
+const HISTORY_THROTTLE = 500;
 
 function MainContent() {
-  const { activeTab } = useAppContext();
-  const prevTabRef = useRef<Tab>(activeTab);
-  const direction =
-    TAB_INDEX[activeTab] > TAB_INDEX[prevTabRef.current] ? 1 : -1;
-  prevTabRef.current = activeTab;
+  const { activeTab, setActiveTab } = useAppContext();
+  const lastHistoryUpdate = useRef(0);
 
-  const variants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 60 : -60,
-      opacity: 0,
-      filter: "blur(4px)",
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-    },
-    exit: (dir: number) => ({
-      x: dir > 0 ? -60 : 60,
-      opacity: 0,
-      filter: "blur(4px)",
-    }),
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const i = TABS.indexOf(activeTab);
+      if (e.key === "PageDown" && i < TABS.length - 1) scrollToSection(TABS[i + 1].toLowerCase());
+      if (e.key === "PageUp" && i > 0) scrollToSection(TABS[i - 1].toLowerCase());
+      if (e.key === "Home") scrollToSection("drive");
+      if (e.key === "End") scrollToSection("comms");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    const valid = TABS.some((t) => t.toLowerCase() === hash);
+    if (valid) {
+      const id = setTimeout(() => scrollToSection(hash), 500);
+      return () => clearTimeout(id);
+    }
+    window.history.replaceState(null, "", "#drive");
+  }, []);
+
+  useEffect(() => {
+    const now = Date.now();
+    const hash = `#${activeTab.toLowerCase()}`;
+    if (window.location.hash !== hash && now - lastHistoryUpdate.current > HISTORY_THROTTLE) {
+      window.history.pushState(null, "", hash);
+      lastHistoryUpdate.current = now;
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const hash = window.location.hash.slice(1);
+      if (TABS.some((t) => t.toLowerCase() === hash)) scrollToSection(hash);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const ids = TABS.map((t) => t.toLowerCase());
+    const { debouncedFn: debouncedSet, cancel } = debounce((tab: Tab) => setActiveTab(tab), 100);
+
+    if (!("IntersectionObserver" in window)) {
+      const handleScroll = () => {
+        let best: Tab | null = null;
+        let max = 0;
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const r = el.getBoundingClientRect();
+          const h = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+          if (h > max) { max = h; best = id.toUpperCase() as Tab; }
+        });
+        if (best) debouncedSet(best);
+      };
+      const target = document.querySelector(".scroll-container") ?? window;
+      target.addEventListener("scroll", handleScroll, { passive: true });
+      return () => { cancel(); target.removeEventListener("scroll", handleScroll); };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let maxRatio = 0;
+        let visible: Tab | null = null;
+        entries.forEach((entry) => {
+          if (entry.intersectionRatio > maxRatio && entry.intersectionRatio >= 0.5) {
+            maxRatio = entry.intersectionRatio;
+            visible = entry.target.id.toUpperCase() as Tab;
+          }
+        });
+        if (visible) debouncedSet(visible);
+      },
+      { root: null, rootMargin: "0px", threshold: [0, 0.5, 1.0] }
+    );
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => { cancel(); observer.disconnect(); };
+  }, [setActiveTab]);
+
+  const sectionProps = {
+    className: "min-h-screen",
+    style: { scrollSnapAlign: "start" as const, willChange: "transform" as const },
+    initial: { opacity: 0, y: 60, filter: "blur(4px)" },
+    whileInView: { opacity: 1, y: 0, filter: "blur(0px)" },
+    viewport: { once: true, amount: 0.1 },
+    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] as [number, number, number, number] },
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Nav />
 
-      <main className="flex-grow flex flex-col relative overflow-hidden">
-        {/* Flash overlay on transition */}
-        <AnimatePresence>
-          <motion.div
-            key={`flash-${activeTab}`}
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: [0, 0.06, 0], y: ["0%", "100%"] }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            className="absolute inset-0 bg-primary-container pointer-events-none z-30"
-          />
-        </AnimatePresence>
+      <AnimatePresence>
+        <motion.div
+          key={`flash-${activeTab}`}
+          initial={{ opacity: 0, y: "-100%" }}
+          animate={{ opacity: [0, 0.06, 0], y: ["0%", "100%"] }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="fixed inset-0 bg-primary-container pointer-events-none z-30"
+        />
+      </AnimatePresence>
 
-        <AnimatePresence mode="wait" custom={direction}>
-          {activeTab === "DRIVE" && (
-            <motion.div
-              key="drive"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-grow flex flex-col"
-            >
-              <DriveView />
-            </motion.div>
-          )}
-          {activeTab === "SPECS" && (
-            <motion.div
-              key="specs"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-grow flex flex-col"
-            >
-              <SpecsView />
-            </motion.div>
-          )}
-          {activeTab === "GARAGE" && (
-            <motion.div
-              key="garage"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-grow flex flex-col"
-            >
-              <GarageView />
-            </motion.div>
-          )}
-          {activeTab === "TELEMETRY" && (
-            <motion.div
-              key="telemetry"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-grow flex flex-col"
-            >
-              <TelemetryView />
-            </motion.div>
-          )}
-          {activeTab === "COMMS" && (
-            <motion.div
-              key="comms"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              className="flex-grow flex flex-col"
-            >
-              <CommsView />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
+      <div className="flex-grow overflow-y-auto scroll-container" style={{ scrollSnapType: "y mandatory" }}>
+        <motion.section id="drive" aria-label="Drive section" {...sectionProps}><DriveView /></motion.section>
+        <motion.section id="specs" aria-label="Specs section" {...sectionProps}><SpecsView /></motion.section>
+        <motion.section id="garage" aria-label="Garage section" {...sectionProps}><GarageView /></motion.section>
+        <motion.section id="telemetry" aria-label="Telemetry section" {...sectionProps}><TelemetryView /></motion.section>
+        <motion.section id="comms" aria-label="Comms section" {...sectionProps}><CommsView /></motion.section>
+        <Footer />
+      </div>
 
-      <Footer />
+      <ScrollIndicator activeTab={activeTab} />
       <TerminalModal />
       <SettingsModal />
     </div>

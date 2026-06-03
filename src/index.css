@@ -158,7 +158,6 @@
 .glitch-text {
   position: relative;
 }
-/* Glitch applies only to the SHIFT_ENGINEER part via data-text on the button */
 .glitch-text::before,
 .glitch-text::after {
   content: attr(data-text);
@@ -227,3 +226,17 @@
 .group:hover .hud-tr { top: -4px; right: -4px; border-color: var(--color-hud-orange-solid); }
 .group:hover .hud-bl { bottom: -4px; left: -4px; border-color: var(--color-hud-orange-solid); }
 .group:hover .hud-br { bottom: -4px; right: -4px; border-color: var(--color-hud-orange-solid); }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .scroll-container {
+    scroll-behavior: auto !important;
+  }
+}

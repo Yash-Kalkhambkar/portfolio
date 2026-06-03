@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
-import { cn } from "../lib/utils";
+import { cn, scrollToSection } from "../lib/utils";
 import { TABS, useAppContext } from "../lib/context";
 
 export function Nav() {
@@ -8,6 +8,13 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleTabClick = (tab: typeof TABS[number]) => {
+    if (tab === activeTab) return;
+
+    const sectionId = tab.toLowerCase();
+    const scrolled = scrollToSection(sectionId);
+
+    if (!scrolled) return;
+
     setActiveTab(tab);
     setMobileOpen(false);
   };
@@ -17,10 +24,9 @@ export function Nav() {
       <nav className="bg-neutral-950/90 backdrop-blur-xl border-b border-white/5 shadow-[0_4px_30px_rgba(255,77,0,0.05)] fixed top-0 left-0 right-0 w-full z-50">
         <div className="flex justify-between items-center px-4 sm:px-6 md:px-12 h-14 md:h-16 max-w-[1440px] mx-auto w-full">
 
-          {/* Left: Logo + Tabs */}
           <div className="flex items-center gap-6 lg:gap-10 min-w-0">
             <button
-              className="font-mono font-black italic tracking-tighter text-primary-container shrink-0 select-none glitch-text"
+              className="font-mono font-black italic tracking-tighter text-primary-container shrink-0 select-none glitch-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
               data-text="YASH // SHIFT_ENGINEER"
               onClick={() => handleTabClick("DRIVE")}
               style={{ fontSize: "clamp(11px, 1.1vw, 15px)" }}
@@ -38,8 +44,9 @@ export function Nav() {
                   <li key={tab} className="relative">
                     <button
                       onClick={() => handleTabClick(tab)}
+                      aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "transition-all cursor-pointer relative pb-1 whitespace-nowrap",
+                        "transition-all cursor-pointer relative pb-1 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
                         isActive
                           ? "text-primary-container"
                           : "text-neutral-400 hover:text-primary-container hover:drop-shadow-[0_0_8px_rgba(255,77,0,0.8)]"
@@ -60,37 +67,35 @@ export function Nav() {
             </ul>
           </div>
 
-          {/* Right: Actions */}
           <div className="flex items-center gap-3 md:gap-4 shrink-0">
-            {/* Icon buttons — desktop only */}
             <div className="hidden md:flex items-center gap-3">
               <button
                 onClick={() => setTerminalOpen(true)}
-                className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all cursor-pointer text-[20px]"
+                className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all cursor-pointer text-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                aria-label="Terminal"
                 title="Terminal"
               >
                 terminal
               </button>
               <button
                 onClick={() => setSettingsOpen(true)}
-                className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all cursor-pointer text-[20px]"
+                className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all cursor-pointer text-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                aria-label="Settings"
                 title="Settings"
               >
                 settings
               </button>
             </div>
 
-            {/* Hire me — always visible */}
             <button
               onClick={() => handleTabClick("COMMS")}
-              className="font-mono tracking-[0.08em] uppercase text-[11px] md:text-[12px] font-bold border border-primary-container/60 text-primary-container bg-transparent px-3 md:px-4 py-1.5 md:py-2 hover:bg-primary-container/10 transition-colors whitespace-nowrap"
+              className="font-mono tracking-[0.08em] uppercase text-[11px] md:text-[12px] font-bold border border-primary-container/60 text-primary-container bg-transparent px-3 md:px-4 py-1.5 md:py-2 hover:bg-primary-container/10 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
             >
               HIRE_ME
             </button>
 
-            {/* Mobile hamburger */}
             <button
-              className="md:hidden flex flex-col gap-[5px] p-1"
+              className="md:hidden flex flex-col gap-[5px] p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle menu"
             >
@@ -111,7 +116,6 @@ export function Nav() {
         </div>
       </nav>
 
-      {/* Mobile drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -129,10 +133,10 @@ export function Nav() {
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
               className="fixed top-0 right-0 bottom-0 w-64 bg-neutral-950 border-l border-white/5 z-50 md:hidden flex flex-col pt-16 px-6 gap-2"
             >
-              {/* Close */}
               <button
-                className="absolute top-4 right-4 material-symbols-outlined text-neutral-400 hover:text-white"
+                className="absolute top-4 right-4 material-symbols-outlined text-neutral-400 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
                 onClick={() => setMobileOpen(false)}
+                aria-label="Close menu"
               >
                 close
               </button>
@@ -141,8 +145,9 @@ export function Nav() {
                 <button
                   key={tab}
                   onClick={() => handleTabClick(tab)}
+                  aria-current={activeTab === tab ? "page" : undefined}
                   className={cn(
-                    "font-mono text-sm font-bold tracking-widest uppercase text-left py-3 border-b border-white/5 transition-colors",
+                    "font-mono text-sm font-bold tracking-widest uppercase text-left py-3 border-b border-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950",
                     activeTab === tab
                       ? "text-primary-container"
                       : "text-neutral-400 hover:text-primary-container"
@@ -155,13 +160,15 @@ export function Nav() {
               <div className="flex gap-4 mt-6 pt-4 border-t border-white/5">
                 <button
                   onClick={() => { setTerminalOpen(true); setMobileOpen(false); }}
-                  className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all text-[20px]"
+                  className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all text-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                  aria-label="Terminal"
                 >
                   terminal
                 </button>
                 <button
                   onClick={() => { setSettingsOpen(true); setMobileOpen(false); }}
-                  className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all text-[20px]"
+                  className="material-symbols-outlined text-neutral-400 hover:text-primary-container transition-all text-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-container focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+                  aria-label="Settings"
                 >
                   settings
                 </button>
