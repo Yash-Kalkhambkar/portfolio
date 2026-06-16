@@ -4,13 +4,14 @@ import { cn, scrollToSection } from "../lib/utils";
 import { TABS, useAppContext } from "../lib/context";
 
 export function Nav() {
-  const { activeTab, setActiveTab, setTerminalOpen, setSettingsOpen } = useAppContext();
+  const { activeTab, setActiveTab, setTerminalOpen, setSettingsOpen, lockScroll } = useAppContext();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleTabClick = (tab: typeof TABS[number]) => {
     if (tab === activeTab) return;
 
     const sectionId = tab.toLowerCase();
+    lockScroll();
     const scrolled = scrollToSection(sectionId);
 
     if (!scrolled) return;

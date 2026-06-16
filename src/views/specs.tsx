@@ -3,18 +3,6 @@ import { HUDBox } from "../components/hud-box";
 
 const projects = [
   {
-    id: "COM-04-SVT",
-    name: "SAVRTI",
-    status: "DEPLOYED",
-    statusColor: "text-[#00C27A]",
-    statusDot: "bg-[#00C27A] shadow-[0_0_10px_rgba(0,194,122,0.6)] animate-pulse",
-    desc: "Secure plant exchange backend with JWT-based authentication and role-based access control. Implements complex trade workflow logic — ownership enforcement, request validation (no self/duplicate requests), and transactional consistency (accept → auto-reject others). Layered Controller–Service–Repository architecture with DTO abstraction.",
-    stack: ["Spring Boot", "PostgreSQL", "Supabase", "JWT", "Render"],
-    demoLabel: "LIVE API",
-    demoLink: "https://savrti-plant-exchange-api.onrender.com/swagger-ui/index.html",
-    sourceLink: "https://github.com/Yash-Kalkhambkar/Savrti.git",
-  },
-  {
     id: "EDU-02-RC",
     name: "Rookie's Coder",
     status: "ONLINE",
@@ -27,6 +15,30 @@ const projects = [
     sourceLink: "https://github.com/Yash-Kalkhambkar/Rookies-Coder-2.0.git",
   },
   {
+    id: "FIN-01-CS",
+    name: "CreditShield",
+    status: "DEPLOYED",
+    statusColor: "text-[#00C27A]",
+    statusDot: "bg-[#00C27A] shadow-[0_0_10px_rgba(0,194,122,0.6)] animate-pulse",
+    desc: "End-to-end AI-powered loan origination platform automating the 7-stage lending lifecycle. Features a 6-step validation pipeline processing 222+ transactions with 30+ financial feature extraction, an AWS Bedrock (Llama) risk scoring engine with dual-validation loops, and a YAML-driven behavioral rule engine supporting 50+ configurable underwriting rules across 5 risk categories. Includes RAG-based policy retrieval with FAISS over RBI circulars, 20+ RESTful APIs, a Flutter borrower app, and a React ops dashboard.",
+    stack: ["FastAPI", "AWS Bedrock", "Flutter", "React", "PostgreSQL", "Docker"],
+    demoLabel: null,
+    demoLink: null,
+    sourceLink: "https://github.com/Yash-Kalkhambkar/Credshield.git",
+  },
+  {
+    id: "COM-04-SVT",
+    name: "SAVRTI",
+    status: "DEPLOYED",
+    statusColor: "text-[#00C27A]",
+    statusDot: "bg-[#00C27A] shadow-[0_0_10px_rgba(0,194,122,0.6)] animate-pulse",
+    desc: "Secure plant exchange backend with JWT-based authentication and role-based access control. Implements complex trade workflow logic — ownership enforcement, request validation (no self/duplicate requests), and transactional consistency (accept → auto-reject others). Layered Controller–Service–Repository architecture with DTO abstraction.",
+    stack: ["Spring Boot", "PostgreSQL", "Supabase", "JWT", "Render"],
+    demoLabel: "LIVE API",
+    demoLink: "https://savrti-plant-exchange-api.onrender.com/swagger-ui/index.html",
+    sourceLink: "https://github.com/Yash-Kalkhambkar/Savrti.git",
+  },
+  {
     id: "SYS-01-ESC",
     name: "Escalation Detector",
     status: "ACTIVE",
@@ -37,18 +49,6 @@ const projects = [
     demoLabel: null,
     demoLink: null,
     sourceLink: "https://github.com/Yash-Kalkhambkar/escalation-detector.git",
-  },
-  {
-    id: "TEL-03-API",
-    name: "Agent Monitor API",
-    status: "STANDBY",
-    statusColor: "text-[#888888]",
-    statusDot: "border border-[#888888] bg-transparent",
-    desc: "Containerized monitoring API with stateless JWT authentication. Integrates LLM insights for intelligent agent tracking. Deployed using Docker for consistent, scalable environments with sub-millisecond data retrieval and robust failover handling.",
-    stack: ["FastAPI", "PostgreSQL", "Docker", "JWT"],
-    demoLabel: null,
-    demoLink: null,
-    sourceLink: "https://github.com/Yash-Kalkhambkar/agent-monitor-api.git",
   },
 ];
 

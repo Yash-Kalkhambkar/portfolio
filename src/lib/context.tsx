@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useRef, useCallback, ReactNode } from "react";
 
 export const TABS = ["DRIVE", "SPECS", "GARAGE", "TELEMETRY", "COMMS"] as const;
 export type Tab = typeof TABS[number];
@@ -10,6 +10,8 @@ interface AppContextType {
   setTerminalOpen: (isOpen: boolean) => void;
   isSettingsOpen: boolean;
   setSettingsOpen: (isOpen: boolean) => void;
+  isScrollLocked: () => boolean;
+  lockScroll: (durationMs?: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -18,9 +20,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [activeTab, setActiveTab] = useState<Tab>("DRIVE");
   const [isTerminalOpen, setTerminalOpen] = useState(false);
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const scrollLockRef = useRef(false);
+  const scrollLockTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  const isScrollLocked = useCallback(() => scrollLockRef.current, []);
+
+  const lockScroll = useCallback((durationMs = 1200) => {
+    scrollLockRef.current = true;
+    clearTimeout(scrollLockTimer.current);
+    scrollLockTimer.current = setTimeout(() => {
+      scrollLockRef.current = false;
+    }, durationMs);
+  }, []);
 
   return (
-    <AppContext.Provider value={{ activeTab, setActiveTab, isTerminalOpen, setTerminalOpen, isSettingsOpen, setSettingsOpen }}>
+    <AppContext.Provider value={{ activeTab, setActiveTab, isTerminalOpen, setTerminalOpen, isSettingsOpen, setSettingsOpen, isScrollLocked, lockScroll }}>
       {children}
     </AppContext.Provider>
   );

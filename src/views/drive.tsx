@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { HUDBox } from "../components/hud-box";
 import { useAppContext } from "../lib/context";
+import { scrollToSection } from "../lib/utils";
 
 // Staggered letter animation
 const containerVariants = {
@@ -55,7 +56,7 @@ function AnimatedText({
 
 export function DriveView() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { setActiveTab } = useAppContext();
+  const { setActiveTab, lockScroll } = useAppContext();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -133,14 +134,14 @@ export function DriveView() {
             className="flex flex-wrap items-center gap-4"
           >
             <button
-              onClick={() => setActiveTab("GARAGE")}
+              onClick={() => { lockScroll(); setActiveTab("GARAGE"); scrollToSection("garage"); }}
               className="bg-primary-container text-on-primary-container font-mono text-[13px] h-[44px] px-5 uppercase tracking-[0.1em] hover:bg-inverse-primary transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(232,93,36,0.35)] hover:shadow-[0_0_30px_rgba(232,93,36,0.6)]"
             >
               EXPLORE GARAGE
               <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
             <button
-              onClick={() => setActiveTab("COMMS")}
+              onClick={() => { lockScroll(); setActiveTab("COMMS"); scrollToSection("comms"); }}
               className="border border-white/40 text-white font-mono text-[13px] h-[44px] px-5 uppercase tracking-[0.1em] hover:bg-white/10 hover:border-white/60 transition-all"
             >
               INITIATE COMMS

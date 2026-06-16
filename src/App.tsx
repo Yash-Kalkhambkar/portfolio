@@ -19,7 +19,7 @@ import { TelemetryView } from "./views/telemetry";
 const HISTORY_THROTTLE = 500;
 
 function MainContent() {
-  const { activeTab, setActiveTab } = useAppContext();
+  const { activeTab, setActiveTab, isScrollLocked } = useAppContext();
   const lastHistoryUpdate = useRef(0);
 
   useEffect(() => {
@@ -68,6 +68,7 @@ function MainContent() {
 
     if (!("IntersectionObserver" in window)) {
       const handleScroll = () => {
+        if (isScrollLocked()) return;
         let best: Tab | null = null;
         let max = 0;
         ids.forEach((id) => {
@@ -86,6 +87,7 @@ function MainContent() {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (isScrollLocked()) return;
         let maxRatio = 0;
         let visible: Tab | null = null;
         entries.forEach((entry) => {
@@ -105,7 +107,7 @@ function MainContent() {
     });
 
     return () => { cancel(); observer.disconnect(); };
-  }, [setActiveTab]);
+  }, [setActiveTab, isScrollLocked]);
 
   const sectionProps = {
     className: "min-h-screen",

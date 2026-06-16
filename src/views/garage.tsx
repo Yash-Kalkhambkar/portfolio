@@ -55,8 +55,8 @@ function ProgressRing({
   );
 }
 
-const frontendTech = ["REACT.JS", "NEXT.JS", "TAILWIND", "TYPESCRIPT", "HTML5", "CSS3"];
-const backendTech = ["SPRING BOOT", "FASTAPI", "NODE.JS", "REST APIs", "JWT", "SPRING SECURITY"];
+const frontendTech = ["REACT.JS", "NEXT.JS", "FLUTTER", "VITE", "TAILWIND", "TYPESCRIPT"];
+const backendTech = ["SPRING BOOT", "FASTAPI", "NODE.JS", "MICROSERVICES", "SPRING SECURITY", "SWAGGER"];
 const infraTools = [
   { name: "DOCKER", icon: "dns" },
   { name: "KUBERNETES", icon: "data_object" },
@@ -65,6 +65,7 @@ const infraTools = [
   { name: "GCP", icon: "cloud_done" },
   { name: "CI/CD", icon: "merge_type" },
   { name: "GITHUB ACTIONS", icon: "play_circle" },
+  { name: "NGINX", icon: "language" },
 ];
 
 const achievements = [
@@ -135,7 +136,7 @@ export function GarageView() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
                 <ProgressRing value={90} colorClass="text-primary-container" label="JAVA" id="SKL-01" />
                 <ProgressRing value={85} colorClass="text-[#00eefc]" label="PYTHON" id="SKL-02" />
-                <ProgressRing value={80} colorClass="text-tertiary" label="TS" id="SKL-03" />
+                <ProgressRing value={80} colorClass="text-tertiary" label="DART" id="SKL-03" />
                 <ProgressRing value={82} colorClass="text-[#00eefc]" label="SQL" id="SKL-04" />
               </div>
             </div>
@@ -150,7 +151,7 @@ export function GarageView() {
               <span className="material-symbols-outlined text-primary-container text-[20px]">psychology</span>
             </div>
             <div className="flex flex-wrap gap-2 sm:gap-3 content-start">
-              {["GROQ LLM", "AWS BEDROCK", "PROMPT ENG.", "LANGCHAIN"].map((tech) => (
+              {["AWS BEDROCK", "GROQ LLM", "LANGCHAIN", "RAG", "FAISS", "PROMPT ENG."].map((tech) => (
                 <motion.span
                   key={tech}
                   whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.4)" }}
